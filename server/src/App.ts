@@ -2,6 +2,7 @@ import express from 'express';
 import * as http from 'http';
 import {Socket} from 'socket.io';
 import * as path from 'path';
+import * as net from 'net';
 
 
 const app = express();
@@ -13,25 +14,11 @@ app.use(express.static(path.join(__dirname, '../../client')));
 export const server = http.createServer(app);
 const io = require('socket.io')(server);
 
-const port = require('port');
-// @ts-ignore
-const pd = new port({
-  write: 5001,
-  'flags': {
-    'noprefs': true,
-    'nogui': false,
-    'stderr': true,
-    'path': 'relatvie/path/to/dir',
-    'open': 'patch.pd'
-  }
+const pdClient = new net.Socket();
+pdClient.connect(5001, '127.0.0.1', () => {
+  console.log('Connected');
+  pdClient.write('Hello, server! Love, Client.');
 });
-
-pd.create();
-
-pd.on('connect', (socket: any) => {
-  pd.write('Hello from node!;\n');
-});
-
 
 io.on('connection', (socket: Socket) => {
   console.log('Connected client: ', socket.id);
