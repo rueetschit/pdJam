@@ -13,15 +13,27 @@ app.use(express.static(path.join(__dirname, '../../client')));
 export const server = http.createServer(app);
 const io = require('socket.io')(server);
 
+const port = require('port');
+// @ts-ignore
+const pd = new Port({
+  write: 5001
+});
+
+pd.create();
+
+pd.on('connect', (socket: any) => {
+  pd.write('Hello from node!;\n');
+});
+
+
 io.on('connection', (socket: Socket) => {
   console.log('Connected client: ', socket.id);
   io.emit('hello', socket.id);
 
-  /*
-  socket.on('start_sequence', () => {
-    io.emit('start_sequence', {});
+  socket.on('pd_controls', (data) => {
+    console.log('received data from client: ', data);
+    // TODO: talk to pure data
   });
-  */
 });
 
 export default app;
