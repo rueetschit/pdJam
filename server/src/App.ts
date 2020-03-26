@@ -15,8 +15,15 @@ const io = require('socket.io')(server);
 
 const port = require('port');
 // @ts-ignore
-const pd = new Port({
-  write: 5001
+const pd = new port({
+  write: 5001,
+  'flags': {
+    'noprefs': true,
+    'nogui': false,
+    'stderr': true,
+    'path': 'relatvie/path/to/dir',
+    'open': 'patch.pd'
+  }
 });
 
 pd.create();
