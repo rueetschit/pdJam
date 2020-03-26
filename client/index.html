@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+<head>
+  <title>pdJam</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+</head>
+<body>
+<p>Hello</p>
+<script>
+  const socket = io('http://localhost:5000');
+  socket.on('hello', () => console.log('hello from server'));
+</script>
+</body>
+</html>
