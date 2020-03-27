@@ -17,7 +17,7 @@ const io = require('socket.io')(server);
 const pdClient = new net.Socket();
 pdClient.connect(5001, '127.0.0.1', () => {
   console.log('Connected');
-  pdClient.write('Hello, server! Love, Client.');
+  pdClient.write('42;');
 });
 
 io.on('connection', (socket: Socket) => {
