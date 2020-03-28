@@ -4,6 +4,7 @@ import {Socket} from 'socket.io';
 import * as path from 'path';
 import * as net from 'net';
 import PdClient from './PdClient';
+import {SynthSettings} from 'SynthSettings.ts';
 
 
 const app = express();
@@ -50,18 +51,22 @@ io.on('connection', (socket: Socket) => {
   socket.on('disconnect', () => {
     availablePdUsers.push(pdUserId);
     userPdMappings.delete(socket.id);
-
     broadcastNumberOfConnectedClients();
     console.log('Client disconnected. Socket id: ', socket.id);
   });
 
-  socket.on('osc_frequency', (frequency) => {
+  socket.on('value_change', (settings: SynthSettings) => {
     if (!userPdMappings.get(socket.id)) {
       console.log('Could not find client socket with id ', socket.id);
       return;
     }
-    pdClient.send(`${userPdMappings.get(socket.id)} frequency ${frequency} ;`);
-    console.log('Received new osc frequency: ', frequency);
+    for (let setting in settings) {
+      // TODO: check if need to map from 0..100 to 0..1 for some settings (volume, etc.)
+      // @ts-ignore
+      pdClient.send(`${userPdMappings.get(socket.id)} ${setting} ${settings[setting]} ;`);
+      // @ts-ignore
+      console.log(`User ${userPdMappings.get(socket.id)}, setting ${setting}: ${settings[setting]}`);
+    }
   });
 });
 

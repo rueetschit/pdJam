@@ -11,25 +11,111 @@
 
 <br/>
 
-<label for="osc-frequency-slider">Oscillator frequency</label>
-<input type="range" min="0" max="1000" id="osc-frequency-slider">
+<div>
+  <label for="frequency-slider">Frequency</label>
+  <input type="range" min="200" max="800" id="frequency-slider">
+</div>
+
+<div>
+  <label for="attack-slider">Attack</label>
+  <input type="range" min="100" max="5000" id="attack-slider">
+</div>
+
+<div>
+  <label for="decay-slider">Decay</label>
+  <input type="range" min="100" max="5000" id="decay-slider">
+</div>
+
+<div>
+  <label for="pause-slider">Pause</label>
+  <input type="range" min="100" max="20000" id="pause-slider">
+</div>
+
+<div>
+  <label for="length-slider">Length</label>
+  <input type="range" min="100" max="20000" id="length-slider">
+</div>
+
+<div>
+  <label for="modfreq-slider">Mod freq</label>
+  <input type="range" min="0" max="5000" id="modfreq-slider">
+</div>
+
+<div>
+  <label for="modamount-slider">Mod amount</label>
+  <input type="range" min="0" max="2000" id="modamount-slider">
+</div>
+
+<div>
+  <label for="lfo-slider">LFO</label>
+  <input type="range" min="0" max="100" id="lfo-slider">
+</div>
+
+<div>
+  <label for="reverb-slider">Reverb</label>
+  <input type="range" min="0" max="100" id="reverb-slider">
+</div>
+
+<div>
+  <label for="volume-slider">Volume</label>
+  <input type="range" min="0" max="100" id="volume-slider">
+</div>
+
+<!-- TODO: add ice cast stream: http://stream.vmk.zhdk.ch:8000/live.mp3 -->
 
 <script>
   const socket = io('http://localhost:5000');
-
-  const connectedClientsInfo = document.getElementById('number-of-connected-clients');
 
   socket.on('connected_clients', (numberOfConnectedClients) => {
     connectedClientsInfo.innerText = numberOfConnectedClients;
     console.log('Currently connected clients: ', numberOfConnectedClients);
   });
 
-  const oscFrequencySlider = document.getElementById("osc-frequency-slider");
-  oscFrequencySlider.onchange = (slider) => {
-    const newFrequency = slider.target.value;
-    socket.emit('osc_frequency', newFrequency);
-    console.log('New frequency: ', newFrequency);
+  const connectedClientsInfo = document.getElementById('number-of-connected-clients');
+
+  const frequencySlider = document.getElementById("frequency-slider");
+  const attackSlider = document.getElementById("attack-slider");
+  const decaySlider = document.getElementById("decay-slider");
+  const pauseSlider = document.getElementById("pause-slider");
+  const lengthSlider = document.getElementById("length-slider");
+  const modfreqSlider = document.getElementById("modfreq-slider");
+  const modamountSlider = document.getElementById("modamount-slider");
+  const lfoSlider = document.getElementById("lfo-slider");
+  const reverbSlider = document.getElementById("reverb-slider");
+  const volumeSlider = document.getElementById("volume-slider");
+
+  frequencySlider.onchange = (slider) => socket.emit('value_change', {frequency: slider.target.value});
+  attackSlider.onchange = (slider) => socket.emit('value_change', {attack: slider.target.value});
+  decaySlider.onchange = (slider) => socket.emit('value_change', {decay: slider.target.value});
+  pauseSlider.onchange = (slider) => socket.emit('value_change', {pause: slider.target.value});
+  lengthSlider.onchange = (slider) => socket.emit('value_change', {length: slider.target.value});
+  modfreqSlider.onchange = (slider) => socket.emit('value_change', {modFreq: slider.target.value});
+  modamountSlider.onchange = (slider) => socket.emit('value_change', {modAmount: slider.target.value});
+  lfoSlider.onchange = (slider) => socket.emit('value_change', {lfo: slider.target.value});
+  reverbSlider.onchange = (slider) => socket.emit('value_change', {reverbSlider: slider.target.value});
+  volumeSlider.onchange = (slider) => socket.emit('value_change', {volume: slider.target.value});
+
+  const randomIntBetween = (min, max) => { // min and max included
+    return Math.floor(Math.random() * (max - min + 1) + min);
   };
+
+  const sliders = [frequencySlider, attackSlider, decaySlider, pauseSlider, lengthSlider, modfreqSlider, modamountSlider, lfoSlider, reverbSlider, volumeSlider];
+  sliders.forEach(slider =>  slider.value = randomIntBetween(slider.min, slider.max));
+
+  // send initial (random) values
+  socket.emit('value_change', {
+    frequency: frequencySlider.value,
+    attack: attackSlider.value,
+    decay: decaySlider.value,
+    pause: pauseSlider.value,
+    length: lengthSlider.value,
+    modFreq: modfreqSlider.value,
+    modAmount: modamountSlider.value,
+    lfo: lfoSlider.value,
+    reverb: reverbSlider.value,
+    volume: volumeSlider.value,
+  });
+
 </script>
 </body>
 </html>

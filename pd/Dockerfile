@@ -6,6 +6,8 @@ EXPOSE 5001
 WORKDIR /app
 
 # Install Pd
+# TODO: install and use Pd-l2ork instead
+#  check http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/
 RUN apt-get update && \
     apt-get install -y wget && \
     apt-get install -y puredata
@@ -14,4 +16,4 @@ RUN apt-get update && \
 ADD patches patches
 
 # Run patch in headless mode
-CMD ["pd", "-nogui", "-open", "patches/netreceive-01.pd"]
+CMD ["pd", "-nogui", "-open", "patches/netreceive-print.pd"]
