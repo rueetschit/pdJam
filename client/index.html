@@ -5,11 +5,19 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 </head>
 <body>
-<p>Hello</p>
+
+<label for="osc-frequency-slider">Oscillator frequency</label>
+<input type="range" min="0" max="1000" id="osc-frequency-slider">
+
 <script>
   const socket = io('http://localhost:5000');
-  socket.on('hello', () => console.log('hello from server'));
-  socket.emit('pd_controls', {value: 50});
+
+  const oscFrequencySlider = document.getElementById("osc-frequency-slider");
+  oscFrequencySlider.onchange = (slider) => {
+    const newFrequency = slider.target.value;
+    socket.emit('osc_frequency', newFrequency);
+    console.log('New frequency: ', newFrequency);
+  };
 </script>
 </body>
 </html>

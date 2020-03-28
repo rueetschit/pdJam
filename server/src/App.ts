@@ -3,6 +3,7 @@ import * as http from 'http';
 import {Socket} from 'socket.io';
 import * as path from 'path';
 import * as net from 'net';
+import PdClient from './PdClient';
 
 
 const app = express();
@@ -14,19 +15,18 @@ app.use(express.static(path.join(__dirname, '../../client')));
 export const server = http.createServer(app);
 const io = require('socket.io')(server);
 
-const pdClient = new net.Socket();
-pdClient.connect(5001, '127.0.0.1', () => {
-  console.log('Connected');
-  pdClient.write('42;');
-});
+const pdClient = new PdClient(new net.Socket(), '127.0.0.1', 5001);
+pdClient.connect();
 
 io.on('connection', (socket: Socket) => {
-  console.log('Connected client: ', socket.id);
-  io.emit('hello', socket.id);
+  console.log('Client connected. Socket id: ', socket.id);
 
-  socket.on('pd_controls', (data) => {
-    console.log('received data from client: ', data);
-    // TODO: talk to pure data
+  // send something to client:
+  // io.emit('hello', socket.id);
+
+  socket.on('osc_frequency', (frequency: number) => {
+    console.log('Received new osc frequency: ', frequency);
+    pdClient.send(`${frequency};`);
   });
 });
 
