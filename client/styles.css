@@ -1,0 +1,11 @@
+.synth-controls {
+    display: flex;
+    flex-direction: column;
+}
+
+.synth-controls div {
+    display: flex;
+    min-width: 200px;
+    max-width: 250px;
+    justify-content: space-between;
+}

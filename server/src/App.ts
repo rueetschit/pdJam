@@ -19,7 +19,7 @@ app.all('*', (req, res) => {
 export const server = http.createServer(app);
 const io = require('socket.io')(server);
 
-const pdClient = new PdClient(new net.Socket(), '127.0.0.1', 5001);
+const pdClient = new PdClient(new net.Socket(), process.env.PD_HOST || '127.0.0.1', +process.env.PD_PORT || 5001);
 pdClient.connect();
 
 const MAX_CLIENTS = 40;

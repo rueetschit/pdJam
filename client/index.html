@@ -2,7 +2,8 @@
 <html>
 <head>
   <title>pdJam</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  <script src="lib/socket.io.js"></script>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -10,55 +11,58 @@
 <span id="number-of-connected-clients"></span>
 
 <br/>
+<br/>
 
-<div>
-  <label for="frequency-slider">Frequency</label>
-  <input type="range" min="200" max="800" id="frequency-slider">
-</div>
+<div class="synth-controls">
+  <div>
+    <label for="frequency-slider">Frequency</label>
+    <input type="range" min="200" max="800" id="frequency-slider">
+  </div>
 
-<div>
-  <label for="attack-slider">Attack</label>
-  <input type="range" min="100" max="5000" id="attack-slider">
-</div>
+  <div>
+    <label for="attack-slider">Attack</label>
+    <input type="range" min="100" max="5000" id="attack-slider">
+  </div>
 
-<div>
-  <label for="decay-slider">Decay</label>
-  <input type="range" min="100" max="5000" id="decay-slider">
-</div>
+  <div>
+    <label for="decay-slider">Decay</label>
+    <input type="range" min="100" max="5000" id="decay-slider">
+  </div>
 
-<div>
-  <label for="pause-slider">Pause</label>
-  <input type="range" min="100" max="20000" id="pause-slider">
-</div>
+  <div>
+    <label for="pause-slider">Pause</label>
+    <input type="range" min="100" max="20000" id="pause-slider">
+  </div>
 
-<div>
-  <label for="length-slider">Length</label>
-  <input type="range" min="100" max="20000" id="length-slider">
-</div>
+  <div>
+    <label for="length-slider">Length</label>
+    <input type="range" min="100" max="20000" id="length-slider">
+  </div>
 
-<div>
-  <label for="modfreq-slider">Mod freq</label>
-  <input type="range" min="0" max="5000" id="modfreq-slider">
-</div>
+  <div>
+    <label for="modfreq-slider">Mod freq</label>
+    <input type="range" min="0" max="5000" id="modfreq-slider">
+  </div>
 
-<div>
-  <label for="modamount-slider">Mod amount</label>
-  <input type="range" min="0" max="2000" id="modamount-slider">
-</div>
+  <div>
+    <label for="modamount-slider">Mod amount</label>
+    <input type="range" min="0" max="2000" id="modamount-slider">
+  </div>
 
-<div>
-  <label for="lfo-slider">LFO</label>
-  <input type="range" min="0" max="100" id="lfo-slider">
-</div>
+  <div>
+    <label for="lfo-slider">LFO</label>
+    <input type="range" min="0" max="100" id="lfo-slider">
+  </div>
 
-<div>
-  <label for="reverb-slider">Reverb</label>
-  <input type="range" min="0" max="100" id="reverb-slider">
-</div>
+  <div>
+    <label for="reverb-slider">Reverb</label>
+    <input type="range" min="0" max="100" id="reverb-slider">
+  </div>
 
-<div>
-  <label for="volume-slider">Volume</label>
-  <input type="range" min="0" max="100" id="volume-slider">
+  <div>
+    <label for="volume-slider">Volume</label>
+    <input type="range" min="0" max="100" id="volume-slider">
+  </div>
 </div>
 
 <!-- TODO: add ice cast stream: http://stream.vmk.zhdk.ch:8000/live.mp3 -->
@@ -100,7 +104,7 @@
   };
 
   const sliders = [frequencySlider, attackSlider, decaySlider, pauseSlider, lengthSlider, modfreqSlider, modamountSlider, lfoSlider, reverbSlider, volumeSlider];
-  sliders.forEach(slider =>  slider.value = randomIntBetween(slider.min, slider.max));
+  sliders.forEach(slider => slider.value = randomIntBetween(slider.min, slider.max));
 
   // send initial (random) values
   socket.emit('value_change', {

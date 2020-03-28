@@ -1,19 +1,23 @@
-FROM ubuntu:18.04
-
-# Pd netreceive port
-EXPOSE 5001
+FROM ubuntu:14.04
+# pd-extended is not supported on newer versions...
 
 WORKDIR /app
 
-# Install Pd
-# TODO: install and use Pd-l2ork instead
-#  check http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/
+# Install pd-extended (needed for audio streaming)
+# installation steps: http://puredata.info/docs/faq/debian
 RUN apt-get update && \
-    apt-get install -y wget && \
-    apt-get install -y puredata
+    apt-get install -y software-properties-common lsb-core && \
+    add-apt-repository "deb http://apt.puredata.info/releases `lsb_release -c | awk '{print $2}'` main" && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-key 9f0fe587374bbe81 && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-key D63D3D09C39F5EEB && \
+    apt-get update && \
+    apt-get install -y --force-yes pd-extended
 
 # Mount the patches into the container
 ADD patches patches
 
+# Pd netreceive port
+EXPOSE 5001
+
 # Run patch in headless mode
-CMD ["pd", "-nogui", "-open", "patches/netreceive-print.pd"]
+CMD ["pd-extended", "-nogui", "-open", "patches/netreceive-print.pd"]

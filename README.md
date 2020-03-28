@@ -6,11 +6,16 @@ Run pure data either locally or use the provided docker image at `./pd`
 
 ## Run server
 
-Install project dependencies (only initially):
-> `$ npm install`
-
-Start the server:
-> `$ npm start`
+    $ cd server
+    
+    # Install project dependencies (only initially):
+    $ npm install
+    
+    # Start server:
+    $ npm start
+    
+    # Optionally define environment variables when running:
+    $ PD_HOST=... PD_PORT=... npm start
 
 
 ## Docs
