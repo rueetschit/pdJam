@@ -6,16 +6,37 @@
 </head>
 <body>
 
+<span>Currently connected clients: </span>
+<span id="number-of-connected-clients"></span>
+
+<br/>
+
 <label for="osc-frequency-slider">Oscillator frequency</label>
 <input type="range" min="0" max="1000" id="osc-frequency-slider">
 
 <script>
   const socket = io('http://localhost:5000');
+  let clientId = undefined;
+
+  socket.on('client_id', (id) => {
+    clientId = id;
+    console.log('Assigned client id: ', id);
+  });
+
+  const connectedClientsInfo = document.getElementById('number-of-connected-clients');
+
+  socket.on('connected_clients', (numberOfConnectedClients) => {
+    console.log('Currently connected clients: ', numberOfConnectedClients);
+    connectedClientsInfo.innerText = numberOfConnectedClients;
+  });
 
   const oscFrequencySlider = document.getElementById("osc-frequency-slider");
   oscFrequencySlider.onchange = (slider) => {
     const newFrequency = slider.target.value;
-    socket.emit('osc_frequency', newFrequency);
+    socket.emit('osc_frequency', {
+      clientId: clientId,
+      frequency: newFrequency
+    });
     console.log('New frequency: ', newFrequency);
   };
 </script>
