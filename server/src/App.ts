@@ -4,7 +4,6 @@ import {Socket} from 'socket.io';
 import * as path from 'path';
 import * as net from 'net';
 import PdClient from './PdClient';
-import {OscFrequencyMessage} from 'OscFrequencyMessage';
 
 
 const app = express();
@@ -20,37 +19,49 @@ const pdClient = new PdClient(new net.Socket(), '127.0.0.1', 5001);
 pdClient.connect();
 
 const MAX_CLIENTS = 40;
-const availableClients: number[] = [];
 
-for (let currentClient = 0; currentClient < MAX_CLIENTS; currentClient++) {
-  availableClients.push(currentClient);
+// Client socket id => Pd id
+const userPdMappings: Map<string, number> = new Map();
+const availablePdUsers: number[] = [];
+
+for (let currentUser = 0; currentUser < MAX_CLIENTS; currentUser++) {
+  availablePdUsers.push(currentUser);
 }
 
+const broadcastNumberOfConnectedClients = () => {
+  io.emit('connected_clients', MAX_CLIENTS - availablePdUsers.length);
+  console.log('No. of connected clients: ', MAX_CLIENTS - availablePdUsers.length);
+  console.log(userPdMappings);
+};
 
 io.on('connection', (socket: Socket) => {
   console.log('Client connected. Socket id: ', socket.id);
 
-  if (availableClients.length <= 0) {
+  if (availablePdUsers.length <= 0) {
     console.log('No more clients available');
     return;
   }
 
-  let clientId = availableClients.pop();
-  console.log('Number of available clients: ', availableClients.length);
+  const pdUserId = availablePdUsers.pop();
+  userPdMappings.set(socket.id, pdUserId);
 
-  socket.emit('client_id', clientId);
-  io.emit('connected_clients', MAX_CLIENTS - availableClients.length);
+  broadcastNumberOfConnectedClients();
 
   socket.on('disconnect', () => {
-    availableClients.push(clientId);
-    io.emit('connected_clients', MAX_CLIENTS - availableClients.length);
+    availablePdUsers.push(pdUserId);
+    userPdMappings.delete(socket.id);
+
+    broadcastNumberOfConnectedClients();
     console.log('Client disconnected. Socket id: ', socket.id);
-    console.log('Number of available clients: ', availableClients.length);
   });
 
-  socket.on('osc_frequency', (message: OscFrequencyMessage) => {
-    console.log('Received new osc frequency: ', message.frequency);
-    pdClient.send(`${message.clientId} frequency ${message.frequency} ;`);
+  socket.on('osc_frequency', (frequency) => {
+    if (!userPdMappings.get(socket.id)) {
+      console.log('Could not find client socket with id ', socket.id);
+      return;
+    }
+    pdClient.send(`${userPdMappings.get(socket.id)} frequency ${frequency} ;`);
+    console.log('Received new osc frequency: ', frequency);
   });
 });
 
