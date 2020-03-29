@@ -22,19 +22,17 @@ const io = require('socket.io')(server);
 const pdClient = new PdClient(new net.Socket(), process.env.PD_HOST || '127.0.0.1', +process.env.PD_PORT || 5001);
 pdClient.connect();
 
-const MAX_CLIENTS = 40;
-
 // Client socket id => Pd id
 const userPdMappings: Map<string, number> = new Map();
 const availablePdUsers: number[] = [];
 
-for (let currentUser = 0; currentUser < MAX_CLIENTS; currentUser++) {
+for (let currentUser = 0; currentUser < PdClient.MAX_USERS; currentUser++) {
   availablePdUsers.push(currentUser);
 }
 
 const broadcastNumberOfConnectedClients = () => {
-  io.emit('connected_clients', MAX_CLIENTS - availablePdUsers.length);
-  console.log('No. of connected clients: ', MAX_CLIENTS - availablePdUsers.length);
+  io.emit('connected_clients', PdClient.MAX_USERS - availablePdUsers.length);
+  console.log('No. of connected clients: ', PdClient.MAX_USERS - availablePdUsers.length);
   console.log(userPdMappings);
 };
 
@@ -52,24 +50,36 @@ io.on('connection', (socket: Socket) => {
   broadcastNumberOfConnectedClients();
 
   socket.on('disconnect', () => {
+    const pdUser = userPdMappings.get(socket.id);
+    if (!pdUser) {
+      console.log('Could not find pd user for client id: ', socket.id);
+      return;
+    }
+    pdClient.exitUser(pdUser);
     availablePdUsers.push(pdUserId);
     userPdMappings.delete(socket.id);
     broadcastNumberOfConnectedClients();
     console.log('Client disconnected. Socket id: ', socket.id);
   });
 
-  socket.on('value_change', (settings: SynthSettings) => {
-    if (!userPdMappings.get(socket.id)) {
-      console.log('Could not find client socket with id ', socket.id);
+  socket.on('init', (settings: SynthSettings) => {
+    const pdUser = userPdMappings.get(socket.id);
+    if (!pdUser) {
+      console.log('Could not find pd user for client id: ', socket.id);
       return;
     }
-    for (let setting in settings) {
-      // TODO: check if need to map from 0..100 to 0..1 for some settings (volume, etc.)
-      // @ts-ignore
-      pdClient.send(`${userPdMappings.get(socket.id)} ${setting} ${settings[setting]} ;`);
-      // @ts-ignore
-      console.log(`User ${userPdMappings.get(socket.id)}, setting ${setting}: ${settings[setting]}`);
+    pdClient.updateSynthSettings(pdUser, settings);
+    pdClient.enterUser(pdUser);
+    console.log('Initialized pdUser ', pdUser);
+  });
+
+  socket.on('value_change', (settings: SynthSettings) => {
+    const pdUser = userPdMappings.get(socket.id);
+    if (!pdUser) {
+      console.log('Could not find pd user for client id: ', socket.id);
+      return;
     }
+    pdClient.updateSynthSettings(pdUser, settings);
   });
 });
 

@@ -96,7 +96,7 @@
   modfreqSlider.onchange = (slider) => socket.emit('value_change', {modFreq: slider.target.value});
   modamountSlider.onchange = (slider) => socket.emit('value_change', {modAmount: slider.target.value});
   lfoSlider.onchange = (slider) => socket.emit('value_change', {lfo: slider.target.value});
-  reverbSlider.onchange = (slider) => socket.emit('value_change', {reverbSlider: slider.target.value});
+  reverbSlider.onchange = (slider) => socket.emit('value_change', {reverb: slider.target.value});
   volumeSlider.onchange = (slider) => socket.emit('value_change', {volume: slider.target.value});
 
   const randomIntBetween = (min, max) => { // min and max included
@@ -107,7 +107,7 @@
   sliders.forEach(slider => slider.value = randomIntBetween(slider.min, slider.max));
 
   // send initial (random) values
-  socket.emit('value_change', {
+  socket.emit('init', {
     frequency: frequencySlider.value,
     attack: attackSlider.value,
     decay: decaySlider.value,

@@ -20,4 +20,4 @@ ADD patches patches
 EXPOSE 5001
 
 # Run patch in headless mode
-CMD ["pd-extended", "-nogui", "-open", "patches/netreceive-print.pd"]
+CMD ["pd-extended", "-nogui", "-open", "patches/pdJam.pd"]
