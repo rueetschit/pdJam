@@ -1,0 +1,18 @@
+version: '3.2'
+services:
+  pd:
+    container_name: pd
+    build: pd/
+    ports:
+      - "5001:5001"
+
+  pdjam:
+    container_name: pdjam
+    build: server/
+    ports:
+      - "5000:5000"
+    environment:
+      - PD_HOST=pd
+      - PD_PORT=5001
+    depends_on:
+      - pd

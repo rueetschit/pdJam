@@ -1,5 +1,5 @@
 FROM ubuntu:14.04
-# pd-extended is not supported on newer versions...
+# pd-extended is not supported on newer versions of ubuntu...
 
 WORKDIR /app
 
