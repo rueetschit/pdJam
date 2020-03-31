@@ -5,6 +5,7 @@ import * as path from 'path';
 import * as net from 'net';
 import PdClient from './PdClient';
 import {SynthSettings} from 'SynthSettings.ts';
+import {Config} from 'Config';
 
 
 const app = express();
@@ -12,6 +13,18 @@ const app = express();
 app.set('port', process.env.PORT || 5000);
 
 app.use(express.static(path.join(__dirname, '../client')));
+
+app.get('/api/config', (req, res) => {
+  const config: Config = {
+    iceCast: {
+      host: process.env.IC_HOST || 'http://localhost',
+      port: +process.env.IC_PORT || 8000,
+      mountPoint: process.env.IC_MOUNTPOINT || 'live.mp3'
+    }
+  };
+  res.json(config);
+});
+
 app.all('*', (req, res) => {
   res.redirect('/');
 });

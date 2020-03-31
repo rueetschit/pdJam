@@ -13,8 +13,9 @@
 <br/>
 <br/>
 
-<audio controls>
-  <source src="http://stream.vmk.zhdk.ch:8000/live.mp3">
+<audio id="audio-stream-player" controls>
+  <!-- src is set dynamically based on config -->
+  <source id="audio-stream-src" src="">
   Your browser does not support the audio element.
 </audio>
 
@@ -82,6 +83,19 @@
     connectedClientsInfo.innerText = numberOfConnectedClients;
     console.log('Currently connected clients: ', numberOfConnectedClients);
   });
+
+  fetch('/api/config')
+    .then(async (response) => {
+      const config = await response.json();
+      console.log('Got config: ', config);
+
+      const audioStreamPlayer = document.getElementById('audio-stream-player');
+      const audioStreamSource = document.getElementById('audio-stream-src');
+
+      audioStreamSource.src = `${config.iceCast.host}:${config.iceCast.port}/${config.iceCast.mountPoint}`;
+      audioStreamPlayer.load();
+    })
+    .catch(e => console.log('Error fetching config: ', e));
 
   const connectedClientsInfo = document.getElementById('number-of-connected-clients');
 

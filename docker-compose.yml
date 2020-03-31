@@ -1,10 +1,5 @@
 version: '3.2'
 services:
-  pd:
-    container_name: pd
-    build: pd/
-    ports:
-      - "5001:5001"
 
   pdjam:
     container_name: pdjam
@@ -14,5 +9,25 @@ services:
     environment:
       - PD_HOST=pd
       - PD_PORT=5001
+      - IC_HOST=http://localhost
+      - IC_PORT=8000
+      - IC_MOUNTPOINT=live.mp3
     depends_on:
       - pd
+
+  pd: # pure data service (pd-extended)
+    container_name: pd
+    build: pd/
+    ports:
+      - "5001:5001"
+    depends_on:
+      - icecast
+
+  icecast: # audio streaming service
+    build: icecast/
+    ports:
+      - "8000:8000"
+    environment:
+      - ICECAST_SOURCE_PASSWORD=flhqoifj-hqofihl2==
+      - ICECAST_ADMIN_PASSWORD=test
+      - ICECAST_RELAY_PASSWORD=test
