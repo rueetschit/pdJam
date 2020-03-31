@@ -30,17 +30,17 @@
 
   <div>
     <label for="attack-slider">Attack</label>
-    <input type="range" min="100" max="5000" id="attack-slider">
+    <input type="range" min="50" max="5000" id="attack-slider">
   </div>
 
   <div>
     <label for="decay-slider">Decay</label>
-    <input type="range" min="100" max="5000" id="decay-slider">
+    <input type="range" min="50" max="5000" id="decay-slider">
   </div>
 
   <div>
     <label for="pause-slider">Pause</label>
-    <input type="range" min="100" max="20000" id="pause-slider">
+    <input type="range" min="500" max="20000" id="pause-slider">
   </div>
 
   <div>
@@ -49,13 +49,18 @@
   </div>
 
   <div>
-    <label for="modfreq-slider">Mod freq</label>
+    <label for="modfreq-slider">Mod 1 freq</label>
     <input type="range" min="0" max="5000" id="modfreq-slider">
   </div>
 
   <div>
-    <label for="modamount-slider">Mod amount</label>
-    <input type="range" min="0" max="2000" id="modamount-slider">
+    <label for="modamount-slider">Mod 1 amount</label>
+    <input type="range" min="0" max="700" id="modamount-slider">
+  </div>
+
+  <div>
+    <label for="mod2freq-slider">Mod 2 freq</label>
+    <input type="range" min="0" max="200" id="mod2freq-slider">
   </div>
 
   <div>
@@ -106,6 +111,7 @@
   const lengthSlider = document.getElementById("length-slider");
   const modfreqSlider = document.getElementById("modfreq-slider");
   const modamountSlider = document.getElementById("modamount-slider");
+  const mod2freqSlider = document.getElementById("mod2freq-slider");
   const lfoSlider = document.getElementById("lfo-slider");
   const reverbSlider = document.getElementById("reverb-slider");
   const volumeSlider = document.getElementById("volume-slider");
@@ -117,6 +123,7 @@
   lengthSlider.onchange = (slider) => socket.emit('value_change', {length: slider.target.value});
   modfreqSlider.onchange = (slider) => socket.emit('value_change', {modFreq: slider.target.value});
   modamountSlider.onchange = (slider) => socket.emit('value_change', {modAmount: slider.target.value});
+  mod2freqSlider.onchange = (slider) => socket.emit('value_change', {modFreq2: slider.target.value});
   lfoSlider.onchange = (slider) => socket.emit('value_change', {lfo: slider.target.value});
   reverbSlider.onchange = (slider) => socket.emit('value_change', {reverb: slider.target.value});
   volumeSlider.onchange = (slider) => socket.emit('value_change', {volume: slider.target.value});
@@ -137,6 +144,7 @@
     length: lengthSlider.value,
     modFreq: modfreqSlider.value,
     modAmount: modamountSlider.value,
+    modFreq2: mod2freqSlider.value,
     lfo: lfoSlider.value,
     reverb: reverbSlider.value,
     volume: volumeSlider.value,

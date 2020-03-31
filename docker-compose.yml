@@ -28,6 +28,6 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - ICECAST_SOURCE_PASSWORD=flhqoifj-hqofihl2==
+      - ICECAST_SOURCE_PASSWORD=IchWillStreamen
       - ICECAST_ADMIN_PASSWORD=test
       - ICECAST_RELAY_PASSWORD=test

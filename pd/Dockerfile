@@ -21,4 +21,4 @@ EXPOSE 5001
 
 # Run patch in headless mode
 # TODO: change the used patch!
-CMD ["pd-extended", "-nogui", "-open", "patches/pdJam-compose-local.pd"]
+CMD ["pd-extended", "-nogui", "-open", "patches/pdJam_test.pd"]
