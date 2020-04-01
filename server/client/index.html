@@ -59,8 +59,8 @@
   </div>
 
   <div>
-    <label for="mod2freq-slider">Mod 2 freq</label>
-    <input type="range" min="0" max="200" id="mod2freq-slider">
+    <label for="modfreq2-slider">Mod 2 freq</label>
+    <input type="range" min="0" max="40" id="modfreq2-slider">
   </div>
 
   <div>
@@ -78,8 +78,6 @@
     <input type="range" min="0" max="100" id="volume-slider">
   </div>
 </div>
-
-<!-- TODO: add ice cast stream: http://stream.vmk.zhdk.ch:8000/live.mp3 -->
 
 <script>
   const socket = io('http://localhost:5000');
@@ -111,7 +109,7 @@
   const lengthSlider = document.getElementById("length-slider");
   const modfreqSlider = document.getElementById("modfreq-slider");
   const modamountSlider = document.getElementById("modamount-slider");
-  const mod2freqSlider = document.getElementById("mod2freq-slider");
+  const modfreq2Slider = document.getElementById("modfreq2-slider");
   const lfoSlider = document.getElementById("lfo-slider");
   const reverbSlider = document.getElementById("reverb-slider");
   const volumeSlider = document.getElementById("volume-slider");
@@ -123,7 +121,7 @@
   lengthSlider.onchange = (slider) => socket.emit('value_change', {length: slider.target.value});
   modfreqSlider.onchange = (slider) => socket.emit('value_change', {modFreq: slider.target.value});
   modamountSlider.onchange = (slider) => socket.emit('value_change', {modAmount: slider.target.value});
-  mod2freqSlider.onchange = (slider) => socket.emit('value_change', {modFreq2: slider.target.value});
+  modfreq2Slider.onchange = (slider) => socket.emit('value_change', {modFreq2: slider.target.value});
   lfoSlider.onchange = (slider) => socket.emit('value_change', {lfo: slider.target.value});
   reverbSlider.onchange = (slider) => socket.emit('value_change', {reverb: slider.target.value});
   volumeSlider.onchange = (slider) => socket.emit('value_change', {volume: slider.target.value});
@@ -144,7 +142,7 @@
     length: lengthSlider.value,
     modFreq: modfreqSlider.value,
     modAmount: modamountSlider.value,
-    modFreq2: mod2freqSlider.value,
+    modFreq2: modfreq2Slider.value,
     lfo: lfoSlider.value,
     reverb: reverbSlider.value,
     volume: volumeSlider.value,

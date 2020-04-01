@@ -6,6 +6,7 @@ export interface SynthSettings {
   length?: number;
   modFreq?: number;
   modAmount?: number;
+  modFreq2?:number
   lfo?: number;
   reverb?: number;
   volume?: number;
