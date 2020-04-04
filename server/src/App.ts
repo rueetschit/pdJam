@@ -16,8 +16,7 @@ app.use(express.static(path.join(__dirname, '../client')));
 
 app.get('/api/config', (req, res) => {
   const config: Config = {
-    host: process.env.HOST || 'localhost',
-    port: +process.env.PORT || 5000,
+    server: process.env.SERVER || 'localhost:5000',
     iceCast: {
       host: process.env.IC_HOST || 'http://localhost',
       port: +process.env.IC_PORT || 8000,

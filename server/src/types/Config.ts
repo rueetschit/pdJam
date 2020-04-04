@@ -1,6 +1,5 @@
 export interface Config {
-  host: string;
-  port: number;
+  server: string;
   iceCast: IceCastConfig;
 }
 

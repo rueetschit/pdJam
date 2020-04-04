@@ -98,7 +98,7 @@
       audioStreamSource.src = `${config.iceCast.host}:${config.iceCast.port}/${config.iceCast.mountPoint}`;
       audioStreamPlayer.load();
 
-      socket = io(`${config.host}:${config.port}`);
+      socket = io(`${config.server}`);
 
       socket.on('connected_clients', (numberOfConnectedClients) => {
         connectedClientsInfo.innerText = numberOfConnectedClients;
