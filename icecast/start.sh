@@ -9,7 +9,7 @@ set_val() {
     fi
 }
 
-# replace passwords with the ones provided as environment vars
+# replace fields in config
 set_val $ICECAST_SOURCE_PASSWORD source-password
 set_val $ICECAST_RELAY_PASSWORD  relay-password
 set_val $ICECAST_ADMIN_PASSWORD  admin-password

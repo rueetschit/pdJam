@@ -1,4 +1,4 @@
-#N canvas 240 369 1440 604 10;
+#N canvas -1642 35 1440 604 10;
 #X obj 49 1266 mp3cast~;
 #X msg -82 1149 passwd IchWillStreamen;
 #X msg -82 1126 icecast2;
@@ -4444,7 +4444,7 @@
 #X connect 101 0 86 0;
 #X restore 2362 375 pd soundGenerator;
 #X f 18;
-#X msg -82 1198 connect pdic.azurewebsites.net 80;
+#X msg -82 1198 connect pdjam-ice.azurewebsites.net 80;
 #X connect 0 0 3 0;
 #X connect 1 0 0 0;
 #X connect 2 0 0 0;

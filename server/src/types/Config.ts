@@ -1,4 +1,6 @@
 export interface Config {
+  host: string;
+  port: number;
   iceCast: IceCastConfig;
 }
 

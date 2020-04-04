@@ -80,12 +80,7 @@
 </div>
 
 <script>
-  const socket = io('http://localhost:5000');
-
-  socket.on('connected_clients', (numberOfConnectedClients) => {
-    connectedClientsInfo.innerText = numberOfConnectedClients;
-    console.log('Currently connected clients: ', numberOfConnectedClients);
-  });
+  let socket = undefined;
 
   fetch('/api/config')
     .then(async (response) => {
@@ -97,6 +92,28 @@
 
       audioStreamSource.src = `${config.iceCast.host}:${config.iceCast.port}/${config.iceCast.mountPoint}`;
       audioStreamPlayer.load();
+
+      socket = io(`${config.host}:${config.port}`);
+
+      socket.on('connected_clients', (numberOfConnectedClients) => {
+        connectedClientsInfo.innerText = numberOfConnectedClients;
+        console.log('Currently connected clients: ', numberOfConnectedClients);
+      });
+
+      // send initial (random) values
+      socket.emit('init', {
+        frequency: frequencySlider.value,
+        attack: attackSlider.value,
+        decay: decaySlider.value,
+        pause: pauseSlider.value,
+        length: lengthSlider.value,
+        modFreq: modfreqSlider.value,
+        modAmount: modamountSlider.value,
+        modFreq2: modfreq2Slider.value,
+        lfo: lfoSlider.value,
+        reverb: reverbSlider.value,
+        volume: volumeSlider.value,
+      });
     })
     .catch(e => console.log('Error fetching config: ', e));
 
@@ -132,22 +149,6 @@
 
   const sliders = [frequencySlider, attackSlider, decaySlider, pauseSlider, lengthSlider, modfreqSlider, modamountSlider, lfoSlider, reverbSlider, volumeSlider];
   sliders.forEach(slider => slider.value = randomIntBetween(slider.min, slider.max));
-
-  // send initial (random) values
-  socket.emit('init', {
-    frequency: frequencySlider.value,
-    attack: attackSlider.value,
-    decay: decaySlider.value,
-    pause: pauseSlider.value,
-    length: lengthSlider.value,
-    modFreq: modfreqSlider.value,
-    modAmount: modamountSlider.value,
-    modFreq2: modfreq2Slider.value,
-    lfo: lfoSlider.value,
-    reverb: reverbSlider.value,
-    volume: volumeSlider.value,
-  });
-
 </script>
 </body>
 </html>

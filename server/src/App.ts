@@ -16,6 +16,8 @@ app.use(express.static(path.join(__dirname, '../client')));
 
 app.get('/api/config', (req, res) => {
   const config: Config = {
+    host: process.env.HOST || 'localhost',
+    port: +process.env.PORT || 5000,
     iceCast: {
       host: process.env.IC_HOST || 'http://localhost',
       port: +process.env.IC_PORT || 8000,
@@ -52,8 +54,9 @@ const broadcastNumberOfConnectedClients = () => {
 io.on('connection', (socket: Socket) => {
   console.log('Client connected. Socket id: ', socket.id);
 
-  if (availablePdUsers.length <= 0) {
+  if (availablePdUsers.length <= 1) {
     console.log('No more clients available');
+    // TODO: notify client that room is full
     return;
   }
 
