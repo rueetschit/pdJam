@@ -64,6 +64,11 @@
   </div>
 
   <div>
+    <label for="modamount2-slider">Mod 2 amount</label>
+    <input type="range" min="0" max="100" id="modamount2-slider">
+  </div>
+
+  <div>
     <label for="lfo-slider">LFO</label>
     <input type="range" min="0" max="100" id="lfo-slider">
   </div>
@@ -110,6 +115,7 @@
         modFreq: modfreqSlider.value,
         modAmount: modamountSlider.value,
         modFreq2: modfreq2Slider.value,
+        modFreq2Amount: modamount2Slider.value,
         lfo: lfoSlider.value,
         reverb: reverbSlider.value,
         volume: volumeSlider.value,
@@ -127,6 +133,7 @@
   const modfreqSlider = document.getElementById("modfreq-slider");
   const modamountSlider = document.getElementById("modamount-slider");
   const modfreq2Slider = document.getElementById("modfreq2-slider");
+  const modamount2Slider = document.getElementById("modamount2-slider");
   const lfoSlider = document.getElementById("lfo-slider");
   const reverbSlider = document.getElementById("reverb-slider");
   const volumeSlider = document.getElementById("volume-slider");
@@ -139,6 +146,7 @@
   modfreqSlider.onchange = (slider) => socket.emit('value_change', {modFreq: slider.target.value});
   modamountSlider.onchange = (slider) => socket.emit('value_change', {modAmount: slider.target.value});
   modfreq2Slider.onchange = (slider) => socket.emit('value_change', {modFreq2: slider.target.value});
+  modamount2Slider.onchange = (slider) => socket.emit('value_change', {modFreq2Amount: slider.target.value});
   lfoSlider.onchange = (slider) => socket.emit('value_change', {lfo: slider.target.value});
   reverbSlider.onchange = (slider) => socket.emit('value_change', {reverb: slider.target.value});
   volumeSlider.onchange = (slider) => socket.emit('value_change', {volume: slider.target.value});

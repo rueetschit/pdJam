@@ -57,6 +57,9 @@ class PdClient {
         // need to map to 0..1 for these settings
         settings[setting] = settings[setting] / 100;
       }
+      if (setting === 'modFreq2Amount') {
+        settings[setting] = settings[setting] / 1000;
+      }
       // @ts-ignore
       this.send(`${pdUserId} ${setting} ${settings[setting]} ;`);
       // @ts-ignore
