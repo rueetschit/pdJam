@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import * as http from 'http';
 import {Socket} from 'socket.io';
 import * as path from 'path';
@@ -12,6 +13,7 @@ const app = express();
 
 app.set('port', process.env.PORT || 5000);
 
+app.use(cors({origin: 'http://tober.org'}));
 app.use(express.static(path.join(__dirname, '../client')));
 
 app.get('/api/config', (req, res) => {
@@ -31,7 +33,7 @@ app.all('*', (req, res) => {
 });
 
 export const server = http.createServer(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {origins: '*:*'});
 
 const pdClient = new PdClient(new net.Socket(), process.env.PD_HOST || '127.0.0.1', +process.env.PD_PORT || 5001);
 pdClient.connect();
