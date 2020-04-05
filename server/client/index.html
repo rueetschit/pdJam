@@ -155,7 +155,7 @@
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
-  const sliders = [frequencySlider, attackSlider, decaySlider, pauseSlider, lengthSlider, modfreqSlider, modamountSlider, lfoSlider, reverbSlider, volumeSlider];
+  const sliders = [frequencySlider, attackSlider, decaySlider, pauseSlider, lengthSlider, modfreqSlider, modamountSlider, modfreqSlider, modamount2Slider, lfoSlider, reverbSlider, volumeSlider];
   sliders.forEach(slider => slider.value = randomIntBetween(slider.min, slider.max));
 </script>
 </body>
