@@ -7,28 +7,23 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - SERVER=localhost:5000
+      - PROXY=http://proxy:5002
       - PD_HOST=pd
       - PD_PORT=5001
-      - IC_HOST=http://localhost
-      - IC_PORT=8000
-      - IC_MOUNTPOINT=live.mp3
     depends_on:
+      - proxy
       - pd
+
+  proxy:
+    container_name: proxy
+    build: proxy/
+    ports:
+      - "5002:5002"
+    environment:
+      - SERVER=localhost:5002
 
   pd: # pure data service (pd-extended)
     container_name: pd
     build: pd/
     ports:
       - "5001:5001"
-    depends_on:
-      - icecast
-
-  icecast: # audio streaming service
-    build: icecast/
-    ports:
-      - "8000:8000"
-    environment:
-      - ICECAST_SOURCE_PASSWORD=IchWillStreamen
-      - ICECAST_ADMIN_PASSWORD=test
-      - ICECAST_RELAY_PASSWORD=test

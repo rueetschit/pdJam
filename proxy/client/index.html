@@ -95,7 +95,7 @@
       const audioStreamPlayer = document.getElementById('audio-stream-player');
       const audioStreamSource = document.getElementById('audio-stream-src');
 
-      audioStreamSource.src = `${config.iceCast.host}:${config.iceCast.port}/${config.iceCast.mountPoint}`;
+      audioStreamSource.src = 'http://stream.vmk.zhdk.ch:8000/live.mp3';
       audioStreamPlayer.load();
 
       socket = io(`${config.server}`);
