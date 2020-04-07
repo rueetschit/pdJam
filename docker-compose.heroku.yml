@@ -1,0 +1,20 @@
+version: '3.2'
+services:
+
+  pdjam:
+    container_name: pdjam
+    build: server/
+    ports:
+      - "5000:5000"
+    environment:
+      - PROXY=https://pdjam-proxy.herokuapp.com
+      - PD_HOST=pd
+      - PD_PORT=5001
+    depends_on:
+      - pd
+
+  pd: # pure data service (pd-extended)
+    container_name: pd
+    build: pd/
+    ports:
+      - "5001:5001"
