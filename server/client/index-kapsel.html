@@ -90,12 +90,6 @@
       const config = await response.json();
       console.log('Got config: ', config);
 
-      const audioStreamPlayer = document.getElementById('audio-stream-player');
-      const audioStreamSource = document.getElementById('audio-stream-src');
-
-      audioStreamSource.src = `${config.iceCast.host}:${config.iceCast.port}/${config.iceCast.mountPoint}`;
-      audioStreamPlayer.load();
-
       socket = io(`${config.server}`);
 
       socket.on('connected_clients', (numberOfConnectedClients) => {
