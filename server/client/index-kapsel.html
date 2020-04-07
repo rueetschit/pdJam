@@ -11,21 +11,9 @@
   <br>
   <br>
   <span id="title">This is your <i>personal drone</i>. </span>
-  <span id="subtitle"><br>Use the sliders to shape its sound, but expect a delay of some seconds.</span>
+  <span id="subtitle"><br>Use the sliders to shape its sound, but expect a delay of some seconds. <br/ > <br/ >Go to <a target="_blank" rel="noopener noreferrer" href="http://kapsel.space">kapsel.space</a> to listen to the stream.</span>
 
-  <audio id="audio-stream-player" autoplay="true">
-    <!-- src is set dynamically based on config -->
-    <source id="audio-stream-src" src="">
-    Your browser does not support the audio element.
-  </audio>
-  <div id="audioplayer">
-    <button id="pButton" class="play" onclick="playAudio()"></button>
 
-    <div id="volume_control">
-
-      <input type="range" onchange="setVolume(this.value)" id="rngVolume" min="0" max="1" step="0.01" value="1">
-    </div>
-  </div>
 
   <div class="synth-controls">
     <div>
@@ -169,22 +157,7 @@
   sliders.forEach(slider => slider.value = randomIntBetween(slider.min, slider.max));
 
 
-var music = document.getElementById('audio-stream-player');
 
-function playAudio() {
-  if (music.paused) {
-    music.play();
-    pButton.className = "";
-    pButton.className = "pause";
-  } else {
-    music.pause();
-    pButton.className = "";
-    pButton.className = "play";
-  }
-}
-function setVolume(volume) {
-   music.volume = volume;
-}
 </script>
 </body>
 </html>
