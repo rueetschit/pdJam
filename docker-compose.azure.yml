@@ -7,7 +7,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - PROXY=http://pdjam-proxy.azurewebsites.net
+      - PROXY=http://pdjam-proxy.azurewebsites.net/pdjam-webclient
       - PD_HOST=pd
       - PD_PORT=5001
     depends_on:
