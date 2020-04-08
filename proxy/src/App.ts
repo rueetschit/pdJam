@@ -61,7 +61,7 @@ const broadcastNumberOfConnectedClients = () => {
 webClientNamespace.on('connection', (socket: Socket) => {
   console.log('Client connected. Socket id: ', socket.id);
 
-  if (!pdjamServerSocket || !pdjamServerSocket.connected) {
+  if (!pdjamServerSocket || pdjamServerSocket.connected !== true) {
     console.log('Client tried to connect but pdjam server is not connected');
     socket.emit('pdjam_error', {message: 'the server is currently disconnected'});
     return;
