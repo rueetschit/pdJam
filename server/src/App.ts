@@ -17,7 +17,7 @@ export const server = http.createServer(app);
 
 // delaying initialization to wait until proxy is ready
 setTimeout(() => {
-  const socket = require('socket.io-client')(process.env.PROXY || 'http://localhost:5002', {query: {id: 'pdjam_server'}});
+  const socket = require('socket.io-client')(process.env.PROXY || 'http://localhost:5002/pdjam-server');
   console.log('Connected to proxy');
 
   const pdClient = new PdClient(new net.Socket(), process.env.PD_HOST || '127.0.0.1', +process.env.PD_PORT || 5001);

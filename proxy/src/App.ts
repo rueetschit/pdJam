@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, '../client')));
 
 app.get('/api/config', (req, res) => {
   const config: Config = {
-    server: process.env.SERVER || 'localhost:5002',
+    server: process.env.SERVER || 'localhost:5002/pdjam-webclient',
   };
   res.json(config);
 });
@@ -35,22 +35,31 @@ for (let currentUser = 0; currentUser < MAX_PD_USERS; currentUser++) {
   availablePdUsers.push(currentUser);
 }
 
+
+// socket.io namespace for pdjam server socket
+const pdjamServerSocket = io.of('/pdjam-server');
+
+// socket.io namespace for web clients
+const webClientNamespace = io.of('pdjam-webclient');
+
+pdjamServerSocket.on('connection', (socket: Socket) => {
+  console.log('pdjam server connected');
+
+  socket.on('disconnect', () => {
+    console.log('pdjam server socket disconnected');
+    webClientNamespace.emit('pdjam_error', {message: 'error, the server was disconnected'});
+    return;
+  });
+});
+
 const broadcastNumberOfConnectedClients = () => {
-  io.emit('connected_clients', MAX_PD_USERS - availablePdUsers.length);
+  webClientNamespace.emit('connected_clients', MAX_PD_USERS - availablePdUsers.length);
   console.log('No. of connected clients: ', MAX_PD_USERS - availablePdUsers.length);
   console.log(userPdMappings);
 };
 
-let pdjamServerSocket: Socket | undefined = undefined;
-
-io.on('connection', (socket: Socket) => {
+webClientNamespace.on('connection', (socket: Socket) => {
   console.log('Client connected. Socket id: ', socket.id);
-
-  if (socket.handshake.query.id === 'pdjam_server') {
-    console.log('pdjam server connected');
-    pdjamServerSocket = socket;
-    return;
-  }
 
   if (!pdjamServerSocket || !pdjamServerSocket.connected) {
     console.log('Client tried to connect but pdjam server is not connected');
@@ -68,13 +77,6 @@ io.on('connection', (socket: Socket) => {
   userPdMappings.set(socket.id, pdUserId);
 
   broadcastNumberOfConnectedClients();
-
-  // TODO: check why not triggering when pdjam server is stopped
-  pdjamServerSocket.on('disconnect', () => {
-    console.log('pdjam server socket disconnected');
-    io.emit('pdjam_error', {message: 'error, the server was disconnected'});
-    return;
-  });
 
   socket.on('disconnect', () => {
     const pdUser = userPdMappings.get(socket.id);
