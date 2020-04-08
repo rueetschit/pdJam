@@ -52,9 +52,15 @@ io.on('connection', (socket: Socket) => {
     return;
   }
 
+  if (!pdjamServerSocket || !pdjamServerSocket.connected) {
+    console.log('Client tried to connect but pdjam server is not connected');
+    socket.emit('pdjam_error', {message: 'the server is currently disconnected'});
+    return;
+  }
+
   if (availablePdUsers.length <= 1) {
     console.log('No more clients available');
-    // TODO: notify client that room is full
+    socket.emit('occupied', {message: 'there are currently no more drones available, please try again later'});
     return;
   }
 
@@ -63,13 +69,14 @@ io.on('connection', (socket: Socket) => {
 
   broadcastNumberOfConnectedClients();
 
-  socket.on('disconnect', () => {
-    if (socket.id === pdjamServerSocket.id) {
-      console.log('pdjam server socket disconnected');
-      // TODO: notify clients that server disconnected
-      return;
-    }
+  // TODO: check why not triggering when pdjam server is stopped
+  pdjamServerSocket.on('disconnect', () => {
+    console.log('pdjam server socket disconnected');
+    io.emit('pdjam_error', {message: 'error, the server was disconnected'});
+    return;
+  });
 
+  socket.on('disconnect', () => {
     const pdUser = userPdMappings.get(socket.id);
     if (!pdUser) {
       console.log('Could not find pd user for client id: ', socket.id);

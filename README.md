@@ -57,11 +57,24 @@ Build and push docker images to Docker Hub
     $ docker push <docker hub username>/pd:latest
     $ docker push <docker hub username>/pdic:latest
 
-Cloud deployment:
-1. Deploy icecast first and set password environment variables
-2. Deploy puredata (set host and password in patch first)
-3. Deploy pdjam server
+
+
+## Proxy setup
+
+1. Make sure proxy app service is running on Azure
+       
+        # set the server environment variable under <Configuration> 
+        SERVER=http://pdjam-proxy.azurewebsites.net
+
+2. Open puredata patch in pd2lork
+
+3. Start the pdjam server in a docker container: 
+
+        $ cd server 
+        $ docker build -t pdjam .
+        $ docker run -e PROXY=http://pdjam-proxy.azurewebsites.net -e PD_HOST=host.docker.internal -e PD_PORT=5001 pdjam
 
 ## Docs
 
 - FUDI - PureData communication protocol: https://en.wikipedia.org/wiki/FUDI
+

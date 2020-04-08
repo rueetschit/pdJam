@@ -7,7 +7,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - PROXY=https://pdjam-proxy.herokuapp.com
+      - PROXY=http://pdjam-proxy.azurewebsites.net
       - PD_HOST=pd
       - PD_PORT=5001
     depends_on:
