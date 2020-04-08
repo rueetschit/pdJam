@@ -7,27 +7,25 @@ The used pure data patch expects the specified icecast server to be running.
 The server expects a running pure data installation with the exposed netreceive port at 5001.  
 Run pure data either locally or use the provided docker image at `./pd`
 
-## Run server
+## Run pdjam server
+
+Make sure the proxy is up and running.
+
+Run with nodejs:
 
     $ cd server
-    
-    # Install project dependencies (only initially):
     $ npm install
-    
-    # Start server:
     $ npm start
-    
-    # Defined environment variables when running:
-    $ PD_HOST=... PD_PORT=... npm start
+
+Run with docker:
+
+    $ cd server 
+    $ docker build -t pdjam .
+    $ docker run -e PROXY=http://pdjam-proxy.azurewebsites.net/pdjam-server -e PD_HOST=host.docker.internal -e PD_PORT=5001 pdjam
 
 ## Run everything with docker-compose
 
-    # Set the icecast passwords to be used as env vars:
-    $ export ICECAST_ADMIN_PASSWORD=...
-    $ export ICECAST_SOURCE_PASSWORD=...
-    $ export ICECAST_RELAY_PASSWORD=...
-    
-    # Build server and puredata images:
+    # Build server, proxy and puredata images:
     $ docker-compose build
     
     # Run both containers:
@@ -38,41 +36,25 @@ Run pure data either locally or use the provided docker image at `./pd`
 
 - pdJam server: http://localhost:5000
 - Puredata: tcp://localhost:5001
-- Icecast audio streaming server: http://localhost:8000
 
-## Deployment to cloud
+
+## Deploy proxy to cloud
 
 Build and push docker images to Docker Hub
    
-    # Build and tag images:
-    $ docker build -t <docker hub username>/pdjam:latest server/
-    $ docker build -t <docker hub username>/pd:latest pd/
-    $ docker build -t <docker hub username>/pdic:latest icecast/
+    $ docker build -t <docker hub username>/pdjam-proxy:latest proxy/
     
     # Log into docker hub:
     $ docker login --username <docker hub username>
    
     # Push to docker hub
-    $ docker push <docker hub username>/pdjam:latest
-    $ docker push <docker hub username>/pd:latest
-    $ docker push <docker hub username>/pdic:latest
+    $ docker push <docker hub username>/pdjam-proxy:latest
 
+Configure a containerized linux-based app service on Azure to pull the previously pushed docker image from Docker Hub.
+After setting up the app service make sure to set the SERVER environment variable in the app service configuration:
 
+    SERVER = http://<app service DNS name>/pdjam-webclient
 
-## Proxy setup
-
-1. Make sure proxy app service is running on Azure
-       
-        # set the server environment variable under <Configuration> 
-        SERVER=http://pdjam-proxy.azurewebsites.net
-
-2. Open puredata patch in pd2lork
-
-3. Start the pdjam server in a docker container: 
-
-        $ cd server 
-        $ docker build -t pdjam .
-        $ docker run -e PROXY=http://pdjam-proxy.azurewebsites.net -e PD_HOST=host.docker.internal -e PD_PORT=5001 pdjam
 
 ## Docs
 
