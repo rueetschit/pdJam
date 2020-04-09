@@ -90,7 +90,9 @@
       <label for="volume-slider">volume</label>
       <input type="range" min="0" max="100" id="volume-slider">
     </div>
+    <div id="disabled-overlay"/>
   </div>
+
   <br>
   <br>
   <div id="clients"><span>Drones in use: </span>
@@ -103,6 +105,9 @@
   let socket = undefined;
   const occupiedMessageElement = document.getElementById('occupied-message');
   occupiedMessageElement.style.display = 'none';
+
+  const disabledOverlay = document.getElementById('disabled-overlay');
+  disabledOverlay.style.display = 'none';
 
   const connectedClientsInfo = document.getElementById('number-of-connected-clients');
   const totalNumberOfClientsInfo = document.getElementById('total-number-of-clients');
@@ -167,6 +172,7 @@
         alert(message.message);
         sliders.forEach(s => s.setAttribute('disabled', 'true'));
         occupiedMessageElement.style.display = 'block';
+        disabledOverlay.style.display = 'block'
       });
 
       frequencySlider.onchange = (slider) => socket.emit('value_change', {frequency: slider.target.value});
