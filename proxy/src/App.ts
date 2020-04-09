@@ -4,6 +4,7 @@ import {Socket} from 'socket.io';
 import * as path from 'path';
 import {SynthSettings} from 'SynthSettings.ts';
 import {Config} from 'Config';
+import * as _ from 'lodash';
 
 const MAX_PD_USERS = 20;
 const app = express();
@@ -40,7 +41,7 @@ for (let currentUser = 0; currentUser < MAX_PD_USERS; currentUser++) {
 const pdjamServerSocket = io.of('/pdjam-server');
 
 // socket.io namespace for web clients
-const webClientNamespace = io.of('pdjam-webclient');
+const webClientNamespace = io.of('/pdjam-webclient');
 
 pdjamServerSocket.on('connection', (socket: Socket) => {
   console.log('pdjam server connected');
@@ -61,7 +62,7 @@ const broadcastNumberOfConnectedClients = () => {
 webClientNamespace.on('connection', (socket: Socket) => {
   console.log('Client connected. Socket id: ', socket.id);
 
-  if (!pdjamServerSocket || pdjamServerSocket.connected !== true) {
+  if (!pdjamServerSocket || _.isEmpty(pdjamServerSocket.connected)) {
     console.log('Client tried to connect but pdjam server is not connected');
     socket.emit('pdjam_error', {message: 'the server is currently disconnected'});
     return;

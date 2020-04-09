@@ -9,7 +9,7 @@ Run pure data either locally or use the provided docker image at `./pd`
 
 ## Run pdjam server
 
-Make sure the proxy is up and running.
+Make sure the proxy and pure data are up and running before starting the pdjam server.
 
 Run with nodejs:
 

@@ -7,7 +7,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - PROXY=http://proxy:5002
+      - PROXY=http://proxy:5002/pdjam-server
       - PD_HOST=pd
       - PD_PORT=5001
     depends_on:
@@ -20,7 +20,7 @@ services:
     ports:
       - "5002:5002"
     environment:
-      - SERVER=localhost:5002
+      - SERVER=localhost:5002/pdjam-webclient
 
   pd: # pure data service (pd-extended)
     container_name: pd

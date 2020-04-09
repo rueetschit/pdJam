@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/rueetschit/pdJam#readme",
   "dependencies": {
+    "@types/lodash": "^4.14.149",
     "express": "^4.17.1",
+    "lodash": "^4.17.15",
     "port": "^0.8.1",
     "socket.io": "^2.3.0",
     "ts-node": "^8.8.1",

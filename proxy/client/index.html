@@ -136,6 +136,7 @@
 
       socket.on('occupied', (message) => {
         alert(message.message);
+        // TODO: instead show audio stream and disable controls (else only 20 peeps can listen)
         window.location.href = '/5xx.html';
       });
     })
