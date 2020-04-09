@@ -54,7 +54,10 @@ pdjamServerSocket.on('connection', (socket: Socket) => {
 });
 
 const broadcastNumberOfConnectedClients = () => {
-  webClientNamespace.emit('connected_clients', MAX_PD_USERS - availablePdUsers.length);
+  webClientNamespace.emit('connected_clients', {
+    connected: MAX_PD_USERS - availablePdUsers.length,
+    total: MAX_PD_USERS,
+  });
   console.log('No. of connected clients: ', MAX_PD_USERS - availablePdUsers.length);
   console.log(userPdMappings);
 };
@@ -68,8 +71,9 @@ webClientNamespace.on('connection', (socket: Socket) => {
     return;
   }
 
-  if (availablePdUsers.length <= 1) {
+  if (availablePdUsers.length < 1) {
     console.log('No more clients available');
+    broadcastNumberOfConnectedClients();
     socket.emit('occupied', {message: 'there are currently no more drones available, please try again later'});
     return;
   }
@@ -81,7 +85,7 @@ webClientNamespace.on('connection', (socket: Socket) => {
 
   socket.on('disconnect', () => {
     const pdUser = userPdMappings.get(socket.id);
-    if (!pdUser) {
+    if (pdUser === undefined) {
       console.log('Could not find pd user for client id: ', socket.id);
       return;
     }
@@ -94,7 +98,7 @@ webClientNamespace.on('connection', (socket: Socket) => {
 
   socket.on('init', (settings: SynthSettings) => {
     const pdUser = userPdMappings.get(socket.id);
-    if (!pdUser) {
+    if (pdUser === undefined) {
       console.log('Could not find pd user for client id: ', socket.id);
       return;
     }
@@ -104,7 +108,7 @@ webClientNamespace.on('connection', (socket: Socket) => {
 
   socket.on('value_change', (settings: SynthSettings) => {
     const pdUser = userPdMappings.get(socket.id);
-    if (!pdUser) {
+    if (pdUser === undefined) {
       console.log('Could not find pd user for client id: ', socket.id);
       return;
     }
