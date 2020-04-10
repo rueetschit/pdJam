@@ -53,7 +53,7 @@ Build and push docker images to Docker Hub
 Configure a containerized linux-based app service on Azure to pull the previously pushed docker image from Docker Hub.
 After setting up the app service make sure to set the SERVER environment variable in the app service configuration:
 
-    SERVER = http://<app service DNS name>/pdjam-webclient
+    SERVER = https://<app service DNS name>/pdjam-webclient
 
 
 ## Docs
