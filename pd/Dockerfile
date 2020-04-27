@@ -21,4 +21,4 @@ EXPOSE 5001
 
 # Run patch in headless mode
 # TODO: adapt the used patch!
-CMD ["pd-extended", "-nogui", "-open", "patches/pdJam_20200331_icecast_docker.pd"]
+CMD ["pd-extended", "-nogui", "-open", "patches/pdJam_20200427_icecast_docker.pd"]
