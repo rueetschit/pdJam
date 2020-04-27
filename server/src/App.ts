@@ -47,17 +47,22 @@ for (let currentUser = 0; currentUser < PdClient.MAX_USERS; currentUser++) {
 }
 
 const broadcastNumberOfConnectedClients = () => {
-  io.emit('connected_clients', PdClient.MAX_USERS - availablePdUsers.length);
+  io.emit('connected_clients', {
+    connected: PdClient.MAX_USERS - availablePdUsers.length,
+    total: PdClient.MAX_USERS,
+  });
   console.log('No. of connected clients: ', PdClient.MAX_USERS - availablePdUsers.length);
   console.log(userPdMappings);
 };
 
+
 io.on('connection', (socket: Socket) => {
   console.log('Client connected. Socket id: ', socket.id);
 
-  if (availablePdUsers.length <= 1) {
+  if (availablePdUsers.length < 1) {
     console.log('No more clients available');
-    // TODO: notify client that room is full
+    broadcastNumberOfConnectedClients();
+    socket.emit('occupied', {message: 'there are currently no more drones available, please try again later'});
     return;
   }
 
@@ -68,7 +73,7 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('disconnect', () => {
     const pdUser = userPdMappings.get(socket.id);
-    if (!pdUser) {
+    if (pdUser === undefined) {
       console.log('Could not find pd user for client id: ', socket.id);
       return;
     }
@@ -81,7 +86,7 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('init', (settings: SynthSettings) => {
     const pdUser = userPdMappings.get(socket.id);
-    if (!pdUser) {
+    if (pdUser === undefined) {
       console.log('Could not find pd user for client id: ', socket.id);
       return;
     }
@@ -92,11 +97,12 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('value_change', (settings: SynthSettings) => {
     const pdUser = userPdMappings.get(socket.id);
-    if (!pdUser) {
+    if (pdUser === undefined) {
       console.log('Could not find pd user for client id: ', socket.id);
       return;
     }
     pdClient.updateSynthSettings(pdUser, settings);
+    console.log('Updated synth settings for pd user: ', pdUser);
   });
 });
 
