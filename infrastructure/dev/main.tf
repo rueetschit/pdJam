@@ -85,7 +85,7 @@ resource "azurerm_network_security_group" "vm_nsg" {
 
   security_rule {
     name                       = "AllowInboundPdjamServer"
-    priority                   = 110
+    priority                   = 120
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
