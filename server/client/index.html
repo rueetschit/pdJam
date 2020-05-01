@@ -13,7 +13,7 @@
   <span id="title">This is your <i>personal drone</i>. </span>
   <span id="subtitle"><br>Use the sliders to shape its sound, but expect a delay of some seconds.</span>
 
-  <audio id="audio-stream-player" autoplay="true">
+  <audio id="audio-stream-player">
     <!-- src is set dynamically based on config -->
     <source id="audio-stream-src" src="">
     Your browser does not support the audio element.
@@ -43,17 +43,17 @@
     </div>
 
     <div>
-      <label for="decay-slider">tail</label>
+      <label for="decay-slider">ease off</label>
       <input type="range" min="100" max="5000" id="decay-slider">
     </div>
 
     <div>
-      <label for="pause-slider">pause</label>
+      <label for="pause-slider">decelerate</label>
       <input type="range" min="500" max="20000" id="pause-slider">
     </div>
 
     <div>
-      <label for="length-slider">length</label>
+      <label for="length-slider">endurance</label>
       <input type="range" min="100" max="20000" id="length-slider">
     </div>
 
@@ -68,17 +68,17 @@
     </div>
 
     <div>
-      <label for="modfreq2-slider">wobble frequency</label>
+      <label for="modfreq2-slider">shiver frequency</label>
       <input type="range" min="0" max="40" id="modfreq2-slider">
     </div>
 
     <div>
-      <label for="modamount2-slider">wobble amount</label>
+      <label for="modamount2-slider">shiver amount</label>
       <input type="range" min="0" max="100" id="modamount2-slider">
     </div>
 
     <div>
-      <label for="lfo-slider">tremolo</label>
+      <label for="lfo-slider">dissonance</label>
       <input type="range" min="0" max="100" id="lfo-slider">
     </div>
 
@@ -88,7 +88,7 @@
     </div>
 
     <div>
-      <label for="volume-slider">volume</label>
+      <label for="volume-slider">power</label>
       <input type="range" min="0" max="100" id="volume-slider">
     </div>
     <div id="disabled-overlay"/>
