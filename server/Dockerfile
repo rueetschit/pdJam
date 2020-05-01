@@ -5,6 +5,9 @@ EXPOSE 5000
 
 COPY . .
 
-RUN npm install
+RUN npm install && \
+    cd frontend && \
+    npm install && \
+    npm run build
 
 CMD ["npm", "start"]

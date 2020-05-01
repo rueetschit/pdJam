@@ -14,7 +14,7 @@ const app = express();
 app.set('port', process.env.PORT || 5000);
 
 app.use(cors({origin: 'http://tober.org'}));
-app.use(express.static(path.join(__dirname, '../client')));
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 app.get('/api/config', (req, res) => {
   const config: Config = {
@@ -55,6 +55,9 @@ const broadcastNumberOfConnectedClients = () => {
   console.log(userPdMappings);
 };
 
+const broadcastUserSettingsChanged = (pdUser: number, settings: SynthSettings) => {
+  io.emit('user_settings_changed', {pdUser: pdUser, settings: settings});
+};
 
 io.on('connection', (socket: Socket) => {
   console.log('Client connected. Socket id: ', socket.id);
@@ -93,6 +96,7 @@ io.on('connection', (socket: Socket) => {
     pdClient.updateSynthSettings(pdUser, settings);
     pdClient.enterUser(pdUser);
     console.log('Initialized pdUser ', pdUser);
+    broadcastUserSettingsChanged(pdUser, settings);
   });
 
   socket.on('value_change', (settings: SynthSettings) => {
@@ -103,6 +107,7 @@ io.on('connection', (socket: Socket) => {
     }
     pdClient.updateSynthSettings(pdUser, settings);
     console.log('Updated synth settings for pd user: ', pdUser);
+    broadcastUserSettingsChanged(pdUser, settings);
   });
 });
 
