@@ -5,6 +5,8 @@ import SynthControls from './components/SynthControls';
 import {Configuration} from './types/Configuration';
 import socketIOClient from 'socket.io-client';
 import {Setting, SynthSettings} from './types/SynthSettings';
+import SynthSettingsService from './services/SynthSettingsService';
+import {debounceTime} from 'rxjs/operators';
 
 
 interface IProps {
@@ -21,6 +23,7 @@ interface IState {
 class App extends React.Component<IProps, IState> {
 
   private socket: any = undefined;
+  private synthSettingsService: SynthSettingsService;
 
   constructor(props: IProps) {
     super(props);
@@ -92,7 +95,7 @@ class App extends React.Component<IProps, IState> {
         },
       }
     };
-    this.onSettingChanged = this.onSettingChanged.bind(this);
+    this.synthSettingsService = new SynthSettingsService();
   }
 
   async componentDidMount(): Promise<void> {
@@ -158,6 +161,13 @@ class App extends React.Component<IProps, IState> {
         }
       });
     });
+
+    this.synthSettingsService.onSettingsChanged()
+      .pipe(debounceTime(200))
+      .subscribe((setting: Setting) => {
+        if (!this.socket) return;
+        this.socket.emit('value_change', {[setting.setting]: setting.value});
+      });
   }
 
   async loadConfiguration() {
@@ -176,12 +186,6 @@ class App extends React.Component<IProps, IState> {
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
-  onSettingChanged(setting: Setting, value: number) {
-    console.log({[setting]: value});
-    if (!this.socket) return;
-    this.socket.emit('value_change', {[setting]: value});
-  }
-
   render() {
     const {config, synthSettings, numOfConnectedClients, totalNumOfConnectedClients, disabled} = this.state;
 
@@ -198,8 +202,8 @@ class App extends React.Component<IProps, IState> {
           settings={synthSettings}
           numOfConnectedClients={numOfConnectedClients}
           totalNumOfConnectedClients={totalNumOfConnectedClients}
-          onChangeSetting={this.onSettingChanged}
           showDisabledMessage={disabled}
+          synthSettingsService={this.synthSettingsService}
         />
       </div>
     )

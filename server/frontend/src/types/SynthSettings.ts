@@ -20,7 +20,7 @@ export interface SliderSetting {
   enabled: boolean;
 }
 
-export enum Setting {
+export enum SettingName {
   FREQUENCY = 'frequency',
   ATTACK = 'attack',
   DECAY = 'decay',
@@ -33,4 +33,9 @@ export enum Setting {
   LFO = 'lfo',
   REVERB = 'reverb',
   VOLUME = 'volume',
+}
+
+export interface Setting {
+  setting: SettingName,
+  value: number,
 }
