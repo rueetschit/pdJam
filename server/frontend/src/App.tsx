@@ -4,9 +4,10 @@ import AudioPlayer from './components/AudioPlayer';
 import SynthControls from './components/SynthControls';
 import {Configuration} from './types/Configuration';
 import socketIOClient from 'socket.io-client';
-import {Setting, SynthSettings} from './types/SynthSettings';
+import {Setting, SynthSettings, UserSettings} from './types/SynthSettings';
 import SynthSettingsService from './services/SynthSettingsService';
 import {debounceTime} from 'rxjs/operators';
+import UserSettingsComponent from './components/UserSettingsComponent';
 
 
 interface IProps {
@@ -18,6 +19,7 @@ interface IState {
   totalNumOfConnectedClients: number;
   synthSettings: SynthSettings;
   disabled: boolean,
+  connectedUserSettings: UserSettings[];
 }
 
 class App extends React.Component<IProps, IState> {
@@ -93,7 +95,8 @@ class App extends React.Component<IProps, IState> {
           min: 0, max: 100,
           enabled: true,
         },
-      }
+      },
+      connectedUserSettings: [],
     };
     this.synthSettingsService = new SynthSettingsService();
   }
@@ -135,9 +138,9 @@ class App extends React.Component<IProps, IState> {
     });
      */
 
-    this.socket.on('user_settings_changed', (userSettings: any) => {
-      console.log('User settings changed: ', userSettings);
-      // TODO
+    this.socket.on('user_settings_changed', (connectedUsers: UserSettings[]) => {
+      console.log('Connected users with settings: ', connectedUsers);
+      this.setState({connectedUserSettings: connectedUsers});
     });
 
     this.socket.on('occupied', (message: any) => {
@@ -187,7 +190,7 @@ class App extends React.Component<IProps, IState> {
   };
 
   render() {
-    const {config, synthSettings, numOfConnectedClients, totalNumOfConnectedClients, disabled} = this.state;
+    const {config, synthSettings, numOfConnectedClients, totalNumOfConnectedClients, disabled, connectedUserSettings} = this.state;
 
     return (
       <div className="wrapper">
@@ -205,6 +208,16 @@ class App extends React.Component<IProps, IState> {
           showDisabledMessage={disabled}
           synthSettingsService={this.synthSettingsService}
         />
+
+        <hr/>
+
+        {connectedUserSettings.map((userSettings, idx) =>
+          <div className="users-overview">
+            <UserSettingsComponent key={idx} userSettings={userSettings} synthSettings={synthSettings}/>
+            <br/>
+            <br/>
+          </div>
+        )}
       </div>
     )
   }

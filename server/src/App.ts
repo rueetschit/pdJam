@@ -55,8 +55,8 @@ const broadcastNumberOfConnectedClients = () => {
   console.log(userPdMappings);
 };
 
-const broadcastUserSettingsChanged = (pdUser: number, settings: SynthSettings) => {
-  io.emit('user_settings_changed', {pdUser: pdUser, settings: settings});
+const broadcastConnectedUsers = () => {
+  io.emit('user_settings_changed', pdClient.getCurrentUsers());
 };
 
 io.on('connection', (socket: Socket) => {
@@ -84,6 +84,7 @@ io.on('connection', (socket: Socket) => {
     availablePdUsers.push(pdUserId);
     userPdMappings.delete(socket.id);
     broadcastNumberOfConnectedClients();
+    broadcastConnectedUsers();
     console.log('Client disconnected. Socket id: ', socket.id);
   });
 
@@ -96,7 +97,7 @@ io.on('connection', (socket: Socket) => {
     pdClient.updateSynthSettings(pdUser, settings);
     pdClient.enterUser(pdUser);
     console.log('Initialized pdUser ', pdUser);
-    broadcastUserSettingsChanged(pdUser, settings);
+    broadcastConnectedUsers();
   });
 
   socket.on('value_change', (settings: SynthSettings) => {
@@ -107,7 +108,7 @@ io.on('connection', (socket: Socket) => {
     }
     pdClient.updateSynthSettings(pdUser, settings);
     console.log('Updated synth settings for pd user: ', pdUser);
-    broadcastUserSettingsChanged(pdUser, settings);
+    broadcastConnectedUsers();
   });
 });
 

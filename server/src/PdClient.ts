@@ -2,10 +2,17 @@ import {Socket} from 'net';
 import {SynthSettings} from 'SynthSettings';
 
 
+interface PdUser {
+  id: number;
+  settings: SynthSettings;
+}
+
 class PdClient {
 
   public static MAX_USERS = 20;
+
   private connected = false;
+  private currentUsers: PdUser[] = [];
 
   constructor(private socket: Socket,
               private host: string,
@@ -45,6 +52,7 @@ class PdClient {
       return;
     }
     this.send(`${pdUserId} stop bang;`);
+    this.currentUsers = this.currentUsers.filter(u => u.id !== pdUserId);
   }
 
   updateSynthSettings(pdUserId: number, settings: SynthSettings) {
@@ -52,6 +60,14 @@ class PdClient {
       console.log('Cannot send message. Not connected to Pd');
       return;
     }
+
+    const user = this.currentUsers.find(u => u.id === pdUserId);
+    if (user !== undefined) {
+      user.settings = {...user.settings, ...settings};
+    } else {
+      this.currentUsers.push({id: pdUserId, settings: settings});
+    }
+
     for (let setting in settings) {
       if (setting === 'reverb' || setting === 'volume') {
         // need to map to 0..1 for these settings
@@ -65,6 +81,10 @@ class PdClient {
       // @ts-ignore
       console.log(`User ${pdUserId}, setting ${setting}: ${settings[setting]}`);
     }
+  }
+
+  getCurrentUsers(): PdUser[] {
+    return this.currentUsers;
   }
 }
 export default PdClient;

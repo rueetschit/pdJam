@@ -39,3 +39,8 @@ export interface Setting {
   setting: SettingName,
   value: number,
 }
+
+export interface UserSettings {
+  id: number;
+  settings: Setting[];
+}

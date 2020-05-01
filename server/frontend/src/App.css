@@ -162,6 +162,27 @@ input[type=range]::-ms-track {
     opacity: 0.8;
 }
 
+.user-info {
+    height: 210px;
+    font-size: 10pt;
+    overflow: scroll;
+}
+
+.other-users-info {
+    font-size: 12pt;
+}
+
+.users-overview  {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-settings {
+    max-width: 200px;
+    opacity: 0.3;
+}
+
 @media only screen and (max-width: 1000px) {
 
     body {
@@ -181,7 +202,7 @@ input[type=range]::-ms-track {
         width: 4vw;
 
         background: #ffffff;
-        margin-top: -20px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+        margin-top: -7px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
     }
 
     /* All the same stuff for Firefox and IE */
