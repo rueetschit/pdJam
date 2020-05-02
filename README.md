@@ -1,7 +1,7 @@
 # PdJam
 *Distributed online synthesizer*
 
-![screenshot](./docs/Screenshot 2020-05-01.png "Screenshot")
+![screenshot](https://github.com/rueetschit/pdJam/raw/master/docs/Screenshot%202020-05-01.png "Screenshot")
 
 
 ## Prerequisites
