@@ -18,7 +18,7 @@
   "homepage": "https://github.com/rueetschit/pdJam#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "port": "^0.8.1",
     "socket.io": "^2.3.0",
     "ts-node": "^8.8.1",
